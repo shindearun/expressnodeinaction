@@ -13,10 +13,5 @@ now the readme is on github remote repository.
 
 cd ..
 express --view=ejs expressproject
-cd expressproject
 create .gitignore file // add node_modules name there.
-npm install --save-dev eslint
-npm install
-SET DEBUG=expressproject:* & npm start // this willstart the http server.
 
-npm install mongodb --save
