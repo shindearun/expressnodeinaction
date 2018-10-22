@@ -1,11 +1,14 @@
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
+var resError = require('res-error');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const validate = require('./middleware/validate');
 
-var indexRouter = require('./routes/index');
+//var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+const entries = require('./routes/entries');
 
 var app = express();
 
@@ -14,14 +17,21 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.set('json spaces', 2);
 
+app.use(resError);
 app.use(logger('dev'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
+
 app.use('/users', usersRouter);
+app.get('/getEnrtyForm',  entries.form);
+app.post('/postEnrtyForm', 
+          validate.required('entry[title]'),
+          validate.lengthAbove('entry[title]',15), 
+          entries.submit);
+app.use('/', entries.list);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

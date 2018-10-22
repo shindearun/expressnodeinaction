@@ -20,3 +20,12 @@ npm install
 SET DEBUG=expressproject:* & npm start // this willstart the http server.
 
 npm install mongodb --save
+modified the bin/www file for initializing mongodb connection.
+
+npm install res-error --save  // this is so that res.error works. as error is not express functon.
+//var resError = require('res-error'); app.use(resError); res.error(404,`${field.join(' ')} is required`);
+
+//For the userId sequence
+db.counters.insert({_id: "userid",seq: 0})
+
+https://www.youtube.com/watch?v=2oFKNL7vYV8   how to debug in VS.

@@ -30,7 +30,9 @@ var server = null;
   server.listen(port);
   server.on('error', onError);
   server.on('listening', onListening);
-});
+  server.on('close', onClose);
+}).catch(() =>{console.log("not connected to server");}
+    );
 
 
 /**
@@ -92,3 +94,21 @@ function onListening() {
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
 }
+
+function onClose() {
+  console.log("on close");
+  
+}
+
+process.on('SIGINT', () => { // for ctrl +c
+  console.info('SIGTERM signal received.');
+  console.log('Closing http server.');
+  server.close(() => {
+    console.log('Http server closed.');
+    db.getMongoClientVar().close().then(() => {
+      console.log('MongoDb connection closed.');
+      process.exit(0);
+    });
+  
+  });
+});
