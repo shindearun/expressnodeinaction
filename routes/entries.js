@@ -3,13 +3,13 @@ const User = require('../models/user');
 
 exports.list = (req, res, next) => {
   const page = req.page;
-  Entry.getRange(0, -1).then((entries)=>{
+  Entry.getRange(0, -1).then((entries) => {
     res.render('entriesList', {
-        title: 'Entries',
-        entries: entries
-      });
-  }).catch((err) =>{
-     return next(err);
+      title: 'Entries',
+      entries: entries
+    });
+  }).catch((err) => {
+    return next(err);
   });
 };
 
@@ -17,11 +17,11 @@ exports.submit = (req, res, next) => {
   const data = req.body.entry;
   let user = null;
   let userName1 = "";
-  if(res.locals.user){
+  if (res.locals.user) {
     userName1 = res.locals.user.name;
-  }else{
-    userName1 ="dummy";
-  }    
+  } else {
+    userName1 = "dummy";
+  }
   const entry = new Entry({
     username: userName1,
     title: data.title,
@@ -39,13 +39,13 @@ exports.submit = (req, res, next) => {
 };
 
 exports.form = (req, res) => {
-    console.log("in getting post form");
-/*  const userdemo = new User({name: 'Example', pass: 'test' });
-  userdemo.save((err)=>{
-    if(err){
+  console.log("in getting post form");
+  /*const userdemo = new User({ name: 'Example', pass: 'test' });
+  userdemo.save((err) => {
+    if (err) {
       console.log(err);
-    }else{
-      console.log('user Id %d',userdemo.userId);
+    } else {
+      console.log('user Id %d', userdemo.userId);
     }
   });*/
   res.render('entryForm', { title: 'Post' });

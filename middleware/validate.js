@@ -18,7 +18,9 @@ exports.required = (field) => {
     if (getField(req, field)) {
       next();
     } else {
-      res.error(404,`${field.join(' ')} is required`);
+     // res.error(404,`${field.join(' ')} is required`);
+     res.error(`${field.join(' ')} is required`);
+     res.redirect('back');
     }
   }
 };
@@ -28,7 +30,9 @@ exports.lengthAbove = (field, len) => {
     if (getField(req, field).length > len) {
       next();
     } else {
-      res.error(404,`${field.join(' ')} must have more than ${len} characters`);
+     // res.error(404,`${field.join(' ')} must have more than ${len} characters`);
+     res.error(`${field.join(' ')} must have more than ${len} characters`);
+     res.redirect('back');
     }
   }
 };

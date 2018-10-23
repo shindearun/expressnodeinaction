@@ -24,8 +24,16 @@ modified the bin/www file for initializing mongodb connection.
 
 npm install res-error --save  // this is so that res.error works. as error is not express functon.
 //var resError = require('res-error'); app.use(resError); res.error(404,`${field.join(' ')} is required`);
+the above was used in validate.js
+OR 
+in th application we have added our own res.error method in messages.js and usedin validate.js
+
 
 //For the userId sequence
 db.counters.insert({_id: "userid",seq: 0})
 
-https://www.youtube.com/watch?v=2oFKNL7vYV8   how to debug in VS.
+https://www.youtube.com/watch?v=2oFKNL7vYV8   how to debug in VS. look at the end 2 minute
+https://www.youtube.com/playlist?list=PL13Vva6TJcSsAFUsZwYpJOfR-ENWypLAe
+
+
+>npm install --save express-session  // for saving messages in session

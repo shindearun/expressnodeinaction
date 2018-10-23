@@ -1,14 +1,18 @@
 var createError = require('http-errors');
 var express = require('express');
+const session = require('express-session');
 var path = require('path');
 var resError = require('res-error');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const validate = require('./middleware/validate');
+const messages = require('./middleware/messages');
 
 //var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 const entries = require('./routes/entries');
+const register = require('./routes/register');
+
 
 var app = express();
 
@@ -22,6 +26,8 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(session({ secret: 'secret', resave: false, saveUninitialized: true }));
+app.use(messages); //As no options is needed messages() is not used as messages is a function.
 app.use(express.static(path.join(__dirname, 'public')));
 
 
@@ -31,6 +37,8 @@ app.post('/postEnrtyForm',
           validate.required('entry[title]'),
           validate.lengthAbove('entry[title]',15), 
           entries.submit);
+app.get('/register', register.form);
+app.post('/register', register.submit);
 app.use('/', entries.list);
 
 // catch 404 and forward to error handler

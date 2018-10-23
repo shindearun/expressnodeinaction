@@ -6,7 +6,7 @@ let mongoClientVar;
 const url = 'mongodb://localhost:27017';
 
 // Database Name
-const dbName = 'myprojectq';
+const dbName = 'expressnodeinaction';
 
 
 
@@ -33,7 +33,6 @@ function getNextSequence(name) {
             { "_id": name }, { $inc: { seq: 1 } },
             {"returnOriginal": false}
           ).then((ret)=>{
-            console.log(ret);
             resolve(Number.parseInt(ret.value.seq));
           }).catch((err)=>{
               reject(err);
@@ -56,6 +55,10 @@ module.exports.General = {
     return db.collection(collectionName).findOne({ _id });
   },
 
+  findOne(collectionName,queryObj) {
+      return db.collection(collectionName).findOne( queryObj ); 
+  },
+
   create(collectionName,data) {
     return db.collection(collectionName).insertOne(data, { w: 1 });
   },
@@ -65,15 +68,26 @@ module.exports.General = {
     return db.collection(collectionName).deleteOne({ _id }, { w: 1 });
   },
 
-  updateOne(collectionName,data,queryString) {
-    if (queryString){
-      return db.collection(collectionName).updateOne({queryString},data, { w: 1 });
+  updateOne(collectionName,data,queryObj) {
+    if (queryObj){
+      let updatedDoc = { $set:  data };
+      return db.collection(collectionName).updateOne(queryObj,updatedDoc, { w: 1 });
     }else{
       return new Promise((resolve, reject)=>{
           reject(new Error("Please provide QueryString to updateOne"));
       })
     }
   },
+  findOneAndReplace(collectionName,data,queryObj) {
+    if (queryObj){
+      return db.collection(collectionName).findOneAndReplace(queryObj,data, { w: 1 });
+    }else{
+      return new Promise((resolve, reject)=>{
+          reject(new Error("Please provide QueryString to updateOne"));
+      })
+    }
+  },
+  
 
   count(collectionName) {
     return db.collection(collectionName).count();
