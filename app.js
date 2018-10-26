@@ -2,7 +2,6 @@ var createError = require('http-errors');
 var express = require('express');
 const session = require('express-session');
 var path = require('path');
-var resError = require('res-error');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const validate = require('./middleware/validate');
@@ -12,6 +11,7 @@ const messages = require('./middleware/messages');
 var usersRouter = require('./routes/users');
 const entries = require('./routes/entries');
 const register = require('./routes/register');
+const login = require('./routes/login');
 
 
 var app = express();
@@ -21,7 +21,6 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.set('json spaces', 2);
 
-app.use(resError);
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -39,6 +38,11 @@ app.post('/postEnrtyForm',
           entries.submit);
 app.get('/register', register.form);
 app.post('/register', register.submit);
+
+app.get('/login', login.form);
+app.post('/login', login.submit);
+app.get('/logout', login.logout);
+
 app.use('/', entries.list);
 
 // catch 404 and forward to error handler

@@ -14,8 +14,7 @@
     "express-session": "^1.15.6",
     "http-errors": "~1.6.2",
     "mongodb": "^3.1.8",
-    "morgan": "~1.9.0",
-    "res-error": "^0.3.1"
+    "morgan": "~1.9.0"
   },
   "devDependencies": {
     "eslint": "^5.7.0"
