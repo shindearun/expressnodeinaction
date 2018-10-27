@@ -73,6 +73,7 @@ class User {
       this.salt = salt;
       bcrypt.hash(this.pass, salt, (err, hash) => {
         if (err) return cb(err);
+        this.originalPass= this.pass;
         this.pass = hash;
         cb();
       });
@@ -89,12 +90,22 @@ class User {
     });
   }
 
+  static get(userId, cb) {
+    let queryObj = {"userId" : userId };
+    db.General.findOne('users', queryObj).then((user)=>{
+      //if no user is found null is return as value in user.
+      cb(null, new User(user));
+    }).catch((err) =>{
+      return cb(err)
+    });
+  }
+
   static authenticate(name, pass, cb) {
     User.getByName(name, (err, user) => {
       if (err) {
         return cb(err);
       }
-      if (!user || !user.id) {
+      if (!user || !user.userId) {
         return cb();
       }
       bcrypt.hash(pass, user.salt, (err, hash) => {

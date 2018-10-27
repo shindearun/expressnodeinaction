@@ -1,6 +1,12 @@
-<div id='menu'>
-    <span class='name'>Menu </span>
-    <a href='/getEnrtyForm'>Get Entry Form</a>
-    <a href='/register'>Register</a>
-    <a href='/logout'>logout</a>
-  </div>
+  <% if (locals.user) { %>
+    <div id='menu'>
+      <span class='name'><%= user.name %></span>
+      <a href='/getEnrtyForm'>post</a>
+      <a href='/logout'>logout</a>
+    </div>
+  <% } else { %>
+    <div id='menu'>
+      <a href='/login'>login</a>
+      <a href='/register'>register</a>
+    </div>
+  <% } %>

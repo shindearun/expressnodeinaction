@@ -6,6 +6,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const validate = require('./middleware/validate');
 const messages = require('./middleware/messages');
+const user = require('./middleware/user');
 
 //var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -26,8 +27,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(session({ secret: 'secret', resave: false, saveUninitialized: true }));
-app.use(messages); //As no options is needed messages() is not used as messages is a function.
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(messages); //As no options is needed messages() is not used as messages is a function.
+
+app.use(user);
 
 
 app.use('/users', usersRouter);

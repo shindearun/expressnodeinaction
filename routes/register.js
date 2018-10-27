@@ -11,15 +11,8 @@ exports.submit = (req, res, next) => {
     if (err) return next(err);
 
     if (user.userId !== 0) {
-     
-      console.log(req.get('Referer'));
-      user.save((err) => {
-        if (err) return next(err);
-        req.session.uid = user.userId;
-        res.error('Username already taken!');
-        res.redirect('back');
-      });
-     
+      res.error('Username already taken!');
+      res.redirect('back');
     } else {
       user = new User({ name: data.name, pass: data.pass });
       user.save((err) => {
