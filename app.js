@@ -47,9 +47,7 @@ app.use(messages); //As no options is needed messages() is not used as messages 
 app.use('/api', api.auth);
 app.use(user);
 
-app.get('/api/user/:id', api.user);
-app.post('/api/entry', entries.submit);
-app.get('/api/entries/:page?', page(Entry.countByQuery,5), api.entries);
+app.use('/api', api.router);  
 
 app.get('/getEnrtyForm',  entries.form);
 app.post('/postEnrtyForm', 

@@ -1,9 +1,16 @@
 const auth = require('basic-auth');
 const User = require('../models/user');
 const Entry = require('../models/entry');
+var express = require('express');
+const entriesRoutes = require('../routes/entries');
+const page = require('../middleware/page');
+
+var router = express.Router();
 
 
-exports.user = (req, res, next) => {
+
+
+let user = (req, res, next) => {
   User.get(req.params.id, (err, user) => {
     if (err) return next(err);
     if (!user.userId) {
@@ -27,7 +34,7 @@ exports.auth = (req, res, next) => {
     });
   };
 
-exports.entries = (req, res, next) => {
+let entries = (req, res, next) => {
   let userName = "";
   if(res.locals.user){
     userName = res.locals.user.name;
@@ -46,3 +53,8 @@ exports.entries = (req, res, next) => {
     return next(err);
   });   
 }
+router.get('/user/:id', user);
+router.post('/entry', entriesRoutes.submit);
+router.get('/entries/:page?', page(Entry.countByQuery,5), entries);
+
+exports.router = router;
