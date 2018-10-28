@@ -2,8 +2,12 @@ const Entry = require('../models/entry');
 const User = require('../models/user');
 
 exports.list = (req, res, next) => {
+  let userName = "";
+  if(res.locals.user){
+    userName = res.locals.user.name;
+  }
   const page = req.page;
-  Entry.getRange(0, -1).then((entries) => {
+  Entry.getRange(page.from, page.to,userName).then((entries) => {
     res.render('entriesList', {
       title: 'Entries',
       entries: entries

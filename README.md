@@ -37,3 +37,10 @@ https://www.youtube.com/playlist?list=PL13Vva6TJcSsAFUsZwYpJOfR-ENWypLAe
 
 
 >npm install --save express-session  // for saving messages in session
+
+> npm install --save basic-auth // for rest api authentication.
+
+>npm i --save lodash  //to check for null and parsing integers
+
+>npm install --save-dev nodemon
+then in package.json change "node" with nodemon in start command

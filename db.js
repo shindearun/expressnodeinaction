@@ -90,17 +90,22 @@ module.exports.General = {
   
 
   count(collectionName) {
-    return db.collection(collectionName).count();
+    return db.collection(collectionName).countDocuments();
   },
 
-  range(collectionName,from,to){
+  countByQuery(collectionName,queryObj) {
+    return db.collection(collectionName).find(queryObj).count();
+  },
+
+  range(collectionName,from,to,queryObj){
       //   db . people .find ( { age: { $gt: 25 , $lte: 50 } } )
     let skipnum = from;
     let limit = 0;
     if(to !== -1){
        limit = to - from; 
+       limit = limit + 1;
     }
-    return db.collection(collectionName).find ().skip(from).limit(0);
+    return db.collection(collectionName).find(queryObj).skip(from).limit(limit);
   }
 
 }

@@ -1,5 +1,6 @@
 const db = require('../db');
 const bcrypt = require('bcrypt');
+const _ = require('lodash');
 
 class User {
     
@@ -91,7 +92,12 @@ class User {
   }
 
   static get(userId, cb) {
-    let queryObj = {"userId" : userId };
+    let userIdInt = userId;
+    if(!_.isFinite(userId)){
+      userIdInt = _.parseInt(userId);
+    }
+    
+    let queryObj = {"userId" : userIdInt };
     db.General.findOne('users', queryObj).then((user)=>{
       //if no user is found null is return as value in user.
       cb(null, new User(user));

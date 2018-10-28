@@ -7,18 +7,25 @@ class Entry {
       }
     }
   
-    static getRange(from, to) {   
+    static getRange(from, to,userName) { 
+      let queryObj = {};
+      if(userName){
+        queryObj = {
+          username: userName
+        }
+      }
+      
     /*  db.General.range('entries',from,to).toArray().then((items)=>{
         let entries = [];
         items.forEach((item) => {
-          entries.push(item);
+          entries.push(item); 
         });
         cb(null, entries);
       }).catch((err) =>{
         return cb(err)
       });*/
       return new Promise((resolve, reject) => {
-        db.General.range('entries',from,to).toArray().then((items)=>{
+        db.General.range('entries',from,to,queryObj).toArray().then((items)=>{
           let entries = [];
           items.forEach((item) => {
             entries.push(item);
@@ -42,7 +49,16 @@ class Entry {
   
     static count(cb) {
       db.General.count('entries').then((number)=>{
-        cb(num);
+        cb(null,number);
+      }).catch((err) =>{
+        return cb(err)
+      });
+     // db.llen('entries', cb);
+    }
+
+    static countByQuery(cb,queryObj) {
+      db.General.countByQuery('entries',queryObj).then((number)=>{
+        cb(null,number);
       }).catch((err) =>{
         return cb(err)
       });
