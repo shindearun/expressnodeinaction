@@ -1,10 +1,39 @@
 const db = require('../db');
+const fs = require('fs');
 
 class Entry {
     constructor(obj) {
       for (let key in obj) {
         this[key] = obj[key];
       }
+    }
+
+    static getFromFile() { 
+      return new Promise((resolve, reject) => {
+        try{
+          const entries = [];
+          let entriesRaw = fs.readFileSync('entries.txt', 'utf8');
+          entriesRaw = entriesRaw.split('---');
+          entriesRaw.map((entryRaw) => {
+            const entry = {};
+            const lines = entryRaw.split('\n');
+            lines.map((line) => {
+              if (line.indexOf('title: ') === 0) {
+                entry.title = line.replace('title: ', '');
+              } else if (line.indexOf('date: ') === 0) {
+                entry.date = line.replace('date: ', '');
+              } else {
+                entry.body = entry.body || '';
+                entry.body += line;
+              }
+            });
+            entries.push(entry);
+        });
+         resolve(entries);
+        }catch(err){
+          reject(err);
+        };
+      });
     }
   
     static getRange(from, to,userName) { 

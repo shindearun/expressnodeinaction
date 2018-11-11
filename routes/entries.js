@@ -54,3 +54,19 @@ exports.form = (req, res) => {
   });*/
   res.render('entryForm', { title: 'Post' });
 };
+
+exports.fromFile = (req, res, next) => {
+  let userName = "";
+  if(res.locals.user){
+    userName = res.locals.user.name;
+  }
+ 
+  Entry.getFromFile().then((entries) => {
+    res.render('entriesList', {
+      title: 'Entries',
+      entries: entries
+    });
+  }).catch((err) => {
+    return next(err);
+  });
+};

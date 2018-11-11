@@ -12,7 +12,7 @@ git push -u origin master
 now the readme is on github remote repository.
 
 cd ..
-express --view=ejs expressproject
+express --view=ejs expressproject // this will create the skeleton
 cd expressproject
 create .gitignore file // add node_modules name there.
 npm install --save-dev eslint
