@@ -18,9 +18,10 @@ module.exports = () => {
         mongoClientVar= client;
         console.log("connected to db");
     })
-    .catch((err) =>{console.log("not connected to db");
+    .catch((err) =>{
+              console.log("not connected to db");
               throw err;
-  }
+          }
     );
 };
 
@@ -52,7 +53,7 @@ module.exports.General = {
 
   find(collectionName,_id) {
     if (typeof _id !== 'object') _id = ObjectID(_id);
-    return db.collection(collectionName).findOne({ _id });
+    return db.collection(collectionName).find({ _id });
   },
 
   findOne(collectionName,queryObj) {
@@ -109,6 +110,7 @@ module.exports.General = {
   }
 
 }
+
 module.exports.Article = {
   all() {
     return db.collection('articles2').find().sort({ title: 1 }).toArray();

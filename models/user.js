@@ -40,7 +40,7 @@ class User {
     db.General.create('users',this).then((result) => {
           cb();
     }).catch((err) =>{
-      return cb(err)
+      return cb(err);
     });
   }
 

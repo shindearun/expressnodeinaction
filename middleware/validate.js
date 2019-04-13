@@ -31,7 +31,7 @@ exports.lengthAbove = (field, len) => {
       next();
     } else {
      // res.error(404,`${field.join(' ')} must have more than ${len} characters`);
-     res.error(`${field.join(' ')} must have more than ${len} characters`);
+     res.info(`${field.join(' ')} must have more than ${len} characters`);
      res.redirect('back');
     }
   }

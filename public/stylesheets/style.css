@@ -31,3 +31,11 @@ a {
   color: black;
 }
 
+.error {
+  background-color: red;
+}
+
+.info {
+  background-color: yellow;
+}
+

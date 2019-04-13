@@ -1,5 +1,6 @@
 const db = require('../db');
 const fs = require('fs');
+const path = require('path');
 
 class Entry {
     constructor(obj) {
@@ -12,7 +13,7 @@ class Entry {
       return new Promise((resolve, reject) => {
         try{
           const entries = [];
-          let entriesRaw = fs.readFileSync('entries.txt', 'utf8');
+          let entriesRaw = fs.readFileSync(path.join(__dirname,'../entries.txt') , 'utf8');
           entriesRaw = entriesRaw.split('---');
           entriesRaw.map((entryRaw) => {
             const entry = {};
