@@ -1,13 +1,13 @@
 var createError = require('http-errors');
 var express = require('express');
 const session = require('express-session');
+const MongoStore = require('connect-mongo')(session);
 var path = require('path');
-var cookieParser = require('cookie-parser');
+//var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const validate = require('./middleware/validate');
 const messages = require('./middleware/messages');
 const user = require('./middleware/user');
-
 
 
 
@@ -19,6 +19,7 @@ const register = require('./routes/register');
 const login = require('./routes/login');
 const page = require('./middleware/page');
 const Entry = require('./models/entry');
+
 
 
 var app = express();
@@ -36,20 +37,22 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // so that json objects can be created with dot indentations.
 //The above are using body-parser internally in express 4.
 
-app.use(cookieParser());
+//app.use(cookieParser()); Arun not needed after 1.5.0 version of express-session
 //the above Parse Cookie header and populate req.cookies with an object keyed by the cookie names.
 // Optionally you may enable signed cookie support by passing a secret string, which assigns req.secret 
 //so it may be used by other middleware.
-app.use(session({ secret: 'secret', resave: false, saveUninitialized: true }));
+//app.use(session({ secret: 'secret', resave: false, saveUninitialized: true, store: new MongoStore({ db: dbinstance}) }));
+app.use(session({ secret: 'secret', resave: false, saveUninitialized: true,store: new MongoStore({
+  url: 'mongodb://localhost:27017/expressnodeinaction',
+  autoRemove: 'native' // Default
+}) }));
 // the above is using npm package for session tracking on a single redirect url. 
 //saveUninitialized: false: don't create session until something stored
 //resave: false, //don't save session if unmodified
 app.use(express.static(path.join(__dirname, 'public')));
 //The above is use to serve static files
-
 app.use(messages); //As no options is needed messages() is not used as messages is a function.
 //The above middleware will add error and removeError methods on res object to be use in validation middleware and called from messages.ejs
-
 //the below is for rest call.
 app.use('/api', api.auth);
 // the above will atuthenticate the user on every /api route.

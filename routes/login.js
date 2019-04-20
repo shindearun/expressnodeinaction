@@ -8,13 +8,15 @@ exports.submit = (req, res, next) => {
   const data = req.body.user;
   User.authenticate(data.name, data.pass, (err, user) => {
     if (err) return next(err);
-    if (user) {
-      req.session.uid = user.userId;
-      res.redirect('/');
-    } else {
-      res.error('Sorry! invalid credentials.');
-      res.redirect('back');
-    }
+    try{
+      if (user) {
+        req.session.uid = user.userId;
+        res.redirect('/');
+      } else {
+        res.error('Sorry! invalid credentials.');
+        res.redirect('back');
+      }
+    }catch(err){next(err);}
   });
 };
 

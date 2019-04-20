@@ -41,7 +41,8 @@ https://www.youtube.com/watch?v=2oFKNL7vYV8   how to debug in VS. look at the en
 https://www.youtube.com/playlist?list=PL13Vva6TJcSsAFUsZwYpJOfR-ENWypLAe
 
 
->npm install --save express-session  // for saving messages in session
+>npm install --save express-session  // for saving messages in session //after 1.5.0 cookie praser is not needed.
+>npm install connect-mongo --save   //for saving session data as memeory store leaks memory in prod env.
 
 > npm install --save basic-auth // for rest api authentication.
 
