@@ -9,7 +9,7 @@ const validate = require('./middleware/validate');
 const messages = require('./middleware/messages');
 const user = require('./middleware/user');
 
-
+const dbinstance = require('./db');
 
 var indexRouter = require('./routes/index');
 const api = require('./routes/api');
@@ -20,7 +20,11 @@ const login = require('./routes/login');
 const page = require('./middleware/page');
 const Entry = require('./models/entry');
 
-
+var sessionStore = new MongoStore({
+  url: 'mongodb://localhost:27017/expressnodeinaction',
+  autoRemove: 'native',
+  ttl: 24 * 60 * 60 // Default
+})
 
 var app = express();
 
@@ -42,10 +46,13 @@ app.use(express.urlencoded({ extended: true })); // so that json objects can be 
 // Optionally you may enable signed cookie support by passing a secret string, which assigns req.secret 
 //so it may be used by other middleware.
 //app.use(session({ secret: 'secret', resave: false, saveUninitialized: true, store: new MongoStore({ db: dbinstance}) }));
+app.use(session({ secret: 'secret1', resave: false, saveUninitialized: false, store: sessionStore }));
+/*
 app.use(session({ secret: 'secret', resave: false, saveUninitialized: true,store: new MongoStore({
   url: 'mongodb://localhost:27017/expressnodeinaction',
   autoRemove: 'native' // Default
 }) }));
+*/
 // the above is using npm package for session tracking on a single redirect url. 
 //saveUninitialized: false: don't create session until something stored
 //resave: false, //don't save session if unmodified

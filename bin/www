@@ -12,107 +12,50 @@ const cluster = require('cluster');
  * Get port from environment and store in Express.
  */
 
- db().then(() => {
-
-
+if (cluster.isMaster) {
+  const numCPUs = require('os').cpus().length;
+  for (let i = 0; i < numCPUs; i++) {
+    cluster.fork();
+  }
+  cluster.on('exit', (worker, code, signal) => {
+    console.log('Worker %s died.', worker.process.pid);
+  });
+}else{
+ db().then(() => { 
       var app = require('../app');
       var debug = require('debug')('expressproject:server');
 
       var port = normalizePort(process.env.PORT || '3000');
       app.set('port', port);
       
-      /**
-       * Create HTTP server.
-       */
-      
-      var server = http.createServer(app);
-      
-      /**
-       * Listen on provided port, on all network interfaces.
-       */
-      
-      server.listen(port);
-      server.on('error', onError);
-      server.on('listening', onListening);
-      server.on('close', onClose);
+      app.listen(3000);
+    console.log('Worker %d running!', cluster.worker.id);
       /**
        * Normalize a port into a number, string, or false.
        */
 
       function normalizePort(val) {
         var port = parseInt(val, 10);
-
         if (isNaN(port)) {
           // named pipe
           return val;
         }
-
         if (port >= 0) {
           // port number
           return port;
         }
-
         return false;
       }
-
-      /**
-       * Event listener for HTTP server "error" event.
-       */
-
-      function onError(error) {
-        if (error.syscall !== 'listen') {
-          throw error;
-        }
-
-        var bind = typeof port === 'string'
-          ? 'Pipe ' + port
-          : 'Port ' + port;
-
-        // handle specific listen errors with friendly messages
-        switch (error.code) {
-          case 'EACCES':
-            console.error(bind + ' requires elevated privileges');
-            process.exit(1);
-            break;
-          case 'EADDRINUSE':
-            console.error(bind + ' is already in use');
-            process.exit(1);
-            break;
-          default:
-            throw error;
-        }
-      }
-
-      /**
-       * Event listener for HTTP server "listening" event.
-       */
-
-      function onListening() {
-        var addr = server.address();
-        var bind = typeof addr === 'string'
-          ? 'pipe ' + addr
-          : 'port ' + addr.port;
-        debug('Listening on ' + bind);
-      }
-
-      function onClose() {
-        console.log("on close");
-        
-      }
-
       process.on('SIGINT', () => { // for ctrl +c
         console.info('SIGTERM signal received.');
         console.log('Closing http server.');
-        server.close(() => {
-          console.log('Http server closed.');
           db.getMongoClientVar().close().then(() => {
             console.log('MongoDb connection closed.');
             process.exit(0);
-          });
-        
-        });
+          });      
       });
 
-}).catch(() =>{
-  console.log("not connected to server");
+}).catch((err) =>{
+  console.log("not connected to server" ,err);
 });
+    }//else end
