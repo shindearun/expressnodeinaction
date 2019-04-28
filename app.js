@@ -3,6 +3,9 @@ var express = require('express');
 const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
 var path = require('path');
+var fs = require('fs');
+var favicon = require('serve-favicon');
+const auth = require('basic-auth');
 //var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const validate = require('./middleware/validate');
@@ -26,8 +29,9 @@ var sessionStore = new MongoStore({
   ttl: 24 * 60 * 60 // Default
 })
 
+const logFile = fs.createWriteStream(path.join(__dirname, 'logs/log.log'),{flags:'a'});
 var app = express();
-
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico'))); //this will avoid the request going to fetch the .ico on each request.
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -36,7 +40,7 @@ app.set('view engine', 'ejs');
 app.set('json spaces', 2); // this will display the json with 2 spaces for indentations
 
 // the following middleware are executed for every request. 
-app.use(logger('dev')); // logger for dev env
+app.use(logger('tiny',{stream:logFile})); // logger for 'dev' without color is 'tiny' env 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // so that json objects can be created with dot indentations.
 //The above are using body-parser internally in express 4.
@@ -63,14 +67,16 @@ app.use(messages); //As no options is needed messages() is not used as messages 
 //the below is for rest call.
 app.use('/api', api.auth);
 // the above will atuthenticate the user on every /api route.
-app.use(user);// the user middleware method is call on every call to the app, that set user obj in the res.local
+app.use(user.setUser);// the user middleware method is call on every call to the app, that set user obj in the res.local
 
 app.use('/api', api.router); 
 
 app.use('/users', usersRouter); 
 
 
+
 //below are web applications references.
+app.use(user.authenticateUserForWeb);
 //To register the user
 app.get('/register', register.form);
 app.post('/register', register.submit);

@@ -47,7 +47,7 @@ if (cluster.isMaster) {
         return false;
       }
       process.on('SIGINT', () => { // for ctrl +c
-        console.info('SIGTERM signal received.');
+        console.log('SIGTERM signal received...');
         console.log('Closing http server.');
           db.getMongoClientVar().close().then(() => {
             console.log('MongoDb connection closed.');

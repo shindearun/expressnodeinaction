@@ -1,6 +1,8 @@
 const User = require('../models/user');
+const auth = require('basic-auth');
 
-module.exports = (req, res, next) => {
+
+exports.setUser = (req, res, next) => {
  // console.log(req.originalUrl);
   if (req.remoteUser) {
     res.locals.user = req.remoteUser;
@@ -15,3 +17,24 @@ module.exports = (req, res, next) => {
     next();
   });
 };
+
+exports.authenticateUserForWeb = (req, res, next) => {
+    const credentials = auth(req);
+    if(credentials && credentials.name === 'arun' & credentials.pass === 'shinde'){
+      next();
+    }else{
+      res.writeHead(401, {
+        'WWW-Authenticate': 'Basic realm="example"'
+      });
+      res.end();
+    }
+
+    /* this ti authenticate from db.
+      User.authenticate(name, pass, (err, user) => {
+        if (user) {
+            req.remoteUser = user;
+        }
+        next(err);
+      });
+    };*/
+  };

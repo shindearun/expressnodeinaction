@@ -20,10 +20,7 @@ let user = (req, res, next) => {
   });
 };
 
-exports.auth1 = (req, res, next) => {
-  req.remoteUser = auth(req);
-  next();
-};
+
 exports.auth = (req, res, next) => {
     const { name, pass } = auth(req);
     User.authenticate(name, pass, (err, user) => {
