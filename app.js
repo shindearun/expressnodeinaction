@@ -5,7 +5,6 @@ const MongoStore = require('connect-mongo')(session);
 var path = require('path');
 var fs = require('fs');
 var favicon = require('serve-favicon');
-const auth = require('basic-auth');
 //var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const validate = require('./middleware/validate');
